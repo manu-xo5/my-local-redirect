@@ -15,4 +15,4 @@ alias "eg" + 'Tab' = "example.com/". Now you can append something like "user/1" 
 
 ### For search engine query:
 Default search engine is "Duck Duck Go", can be changed using ":add s <query-link>".
-for google, query-link = "www.google.com/search?q=<query-here>"
+for google, query-link = "google.com/search?q=<query-here>"
