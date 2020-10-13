@@ -1,0 +1,96 @@
+<head>
+  <title>New Page</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      font-family: sans-serif;
+    }
+
+    body {
+      display: grid;
+      place-items: center;
+      background-color: skyblue;
+      height: 100vh;
+      overflow: hidden;
+      color: #444444;
+    }
+
+    input {
+      width: 60vw;
+      padding: 1rem;
+
+      border: 4px solid rgb(165, 42, 42);
+      border-radius: 1.5rem;
+      font-size: 1.5rem;
+      outline: none;
+      transition: all 0.2s ease;
+      animation: my-raise-up 0.4s forwards ease;
+    }
+
+    input:hover,
+    input:focus {
+      box-shadow: 0 0 0 3px rgba(165, 42, 42, 0.5);
+    }
+    @keyframes my-raise-up {
+      0% {
+        transform: translateY(50vh) scale(0.9);
+        opacity: 0.1;
+      }
+      70% {
+        transform: translateY(-2rem) scale(1.02);
+      }
+      100% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <input
+    id="input"
+    placeholder="Go to https://...."
+    autofocus
+    autocomplete="false"
+  />
+  <script>
+    const inputElm = document.getElementById('input');
+    const STORAGE_KEY = 'my-redirect-service';
+    const Redirects = JSON.parse(localStorage.getItem(STORAGE_KEY)) ?? {
+      mail: 'mail.google.com/mail/u/',
+      yt: 'youtube.com',
+      spoti: 'open.spotify.com',
+      outlook: 'outlook.office.com',
+      gh: 'github.com',
+      's ': 'duckduckgo.com/?q=',
+    };
+
+    function handleKeys(e) {
+      const { target, code } = e;
+
+      if (code === 'Enter') {
+        if (target.value.startsWith(':add ')) {
+          const [, key, value] = target.value.split(' ');
+          localStorage.setItem(
+            STORAGE_KEY,
+            JSON.stringify({ ...Redirects, [key]: value })
+          );
+          target.value = '';
+        } else if (target.value.startsWith('s ')) {
+          const query = target.value.substring(2);
+          location.assign('https://' + Redirects['s '] + query);
+        } else {
+          const uri = Redirects[target.value] ?? target.value;
+          location.assign('https://' + uri);
+        }
+      } else if (code === 'Tab') {
+        e.preventDefault();
+        target.value = Redirects[target.value] ?? target.value;
+      }
+    }
+
+    inputElm.addEventListener('keydown', handleKeys);
+  </script>
+</body>
